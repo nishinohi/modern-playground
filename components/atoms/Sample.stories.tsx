@@ -1,8 +1,6 @@
 // Sample.stories.ts|tsx
 
-import React from 'react'
-
-import { ComponentStory, ComponentMeta } from '@storybook/react'
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
 import { Sample } from './Sample'
 
 //👇 This default export determines where your story goes in the story list

@@ -1,16 +1,12 @@
+import { Sample } from '@/components/atoms/Sample'
+import styles from '@/styles/Home.module.css'
+import { Inter } from '@next/font/google'
 import Head from 'next/head'
 import Image from 'next/image'
-import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
-import { Sample } from '@/components/atoms/Sample'
-import { useAtom } from 'jotai'
-import { animeAtom } from '@/jotai/atoms/sample'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
-  const [anime, setAnime] = useAtom(animeAtom)
-
   return (
     <>
       <Head>

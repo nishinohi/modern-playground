@@ -1,12 +1,9 @@
-import type { Meta, StoryObj } from '@storybook/react'
-import type { ComponentProps } from 'react'
-import { Task } from '.'
-
-type TaskProps = ComponentProps<typeof Task>
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
+import { Task } from './'
 
 export default {
   component: Task,
-} as Meta<TaskProps>
+} as ComponentMeta<typeof Task>
 
 const task = {
   id: '1',
@@ -14,15 +11,9 @@ const task = {
   state: 'TASK_INBOX',
 }
 
-export const Template: StoryObj<TaskProps> = {
+export const Template: ComponentStoryObj<typeof Task> = {
   args: {
     task: { ...task },
-    onArchiveTask(id) {
-      console.log(id)
-    },
-    onPinTask(id) {
-      console.log(id)
-    },
   },
 }
 

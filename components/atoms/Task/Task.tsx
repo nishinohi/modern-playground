@@ -13,7 +13,7 @@ export type Props = {
 /**
  *
  */
-export const Task = ({ task: { id, title, state }, onArchiveTask, onPinTask }: Props) => {
+export const Task: React.FC<Props> = ({ task: { id, title, state }, onArchiveTask, onPinTask }) => {
   return (
     <div className={`list-item ${state}`}>
       <label htmlFor="checked" aria-label={`archiveTask-${id}`} className="checkbox">

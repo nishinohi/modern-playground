@@ -1,5 +1,5 @@
+import { withThemeByClassName } from '@storybook/addon-styling'
 import '../styles/globals.css'
-import { withTailwindTheme } from './withTailwindTheme'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
@@ -11,21 +11,12 @@ export const parameters = {
   },
 }
 
-export const globalTypes = {
-  theme: {
-    name: 'Theme',
-    description: 'Global theme for components',
-    toolbar: {
-      icon: 'paintbrush',
-      // Array of plain string values or MenuItem shape
-      items: [
-        { value: 'light', title: 'Light', left: '🌞' },
-        { value: 'dark', title: 'Dark', left: '🌛' },
-      ],
-      // Change title based on selected value
-      dynamicTitle: true,
+export const decorators = [
+  withThemeByClassName({
+    themes: {
+      light: 'light',
+      dark: 'dark',
     },
-  },
-}
-
-export const decorators = [withTailwindTheme]
+    defaultTheme: 'light',
+  }),
+]

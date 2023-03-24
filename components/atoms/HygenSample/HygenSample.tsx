@@ -8,5 +8,5 @@ export type Props = {
  *
  */
 export const HygenSample: React.FC<Props> = (props) => {
-  return <div>{props.title}</div>
+  return <div className="bg-red-400 dark:bg-green-300">{props.title}</div>
 }

@@ -1,7 +1,10 @@
 import { EditorContent, FloatingMenu, useEditor } from '@tiptap/react'
+
 import StarterKit from '@tiptap/starter-kit'
 import { useEffect, useState } from 'react'
-import { RiMapPinAddLine } from 'react-icons/ri'
+import { BiCodeBlock } from 'react-icons/bi'
+import { FaListOl, FaListUl } from 'react-icons/fa'
+import { IoIosQuote } from 'react-icons/io'
 
 const Tiptap = () => {
   const editor = useEditor({
@@ -14,8 +17,8 @@ const Tiptap = () => {
     `,
     editorProps: {
       attributes: {
-        class: 'prose prose-neutral m-5 rounded-md border border-solid p-5 focus:outline-none',
-        // 'prose prose-neutral dark:prose-invert prose-sm sm:prose-base lg:prose-lg xl:prose-2xl m-5 focus:outline-none',
+        class:
+          'prose prose-sm w-full prose-neutral m-5 rounded-md border border-solid border-stone-500 p-5 dark:prose-invert sm:prose-base lg:prose-lg xl:prose-2xl focus:outline-none',
       },
     },
   })
@@ -36,29 +39,58 @@ const Tiptap = () => {
       </div>
       {editor && (
         <FloatingMenu editor={editor} tippyOptions={{ duration: 100, placement: 'left' }}>
-          <RiMapPinAddLine className={'h-6 w-6 fill-stone-700 hover:cursor-pointer'} />
-          {/* <button
-            onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
-            className={`rounded-md border border-solid border-gray-500 px-1
-            ${editor.isActive('heading', { level: 1 }) ? 'bg-slate-300' : ''}`}
-          >
-            h1
-          </button> */}
-          {/* <button
+          <div className="flex h-7 items-center space-x-2">
+            <button
+              onClick={() => editor.chain().focus().toggleHeading({ level: 1 }).run()}
+              className={`h-full rounded-md border border-solid border-stone-500 px-1 font-bold text-stone-600
+            ${editor.isActive('heading', { level: 1 }) ? 'bg-stone-200' : ''}`}
+            >
+              h1
+            </button>
+            <button
               onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
-              className={`rounded-md border border-solid border-gray-500 px-1
-              ${editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}`}
+              className={`h-full rounded-md border border-solid border-stone-500 px-1 font-bold text-stone-600
+              ${editor.isActive('heading', { level: 2 }) ? 'bg-stone-200' : ''}`}
             >
               h2
             </button>
             <button
               onClick={() => editor.chain().focus().toggleBulletList().run()}
-              className={`rounded-md border border-solid border-gray-500 px-1
-                ${editor.isActive('bulletList') ? 'is-active' : ''}`}
+              className={
+                `h-full w-7 cursor-pointer rounded-md border border-solid border-stone-500 fill-stone-600 px-1` +
+                `${editor.isActive('bulletList') ? 'bg-stone-200' : ''}`
+              }
             >
-              bullet list
-            </button> */}
-          {/* </div> */}
+              <FaListUl className={'fill-stone-600'} />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().toggleOrderedList().run()}
+              className={
+                `h-full w-7 cursor-pointer rounded-md border border-solid border-stone-500 fill-stone-600 px-1` +
+                `${editor.isActive('bulletList') ? 'bg-stone-200' : ''}`
+              }
+            >
+              <FaListOl className={'fill-stone-600'} />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().toggleBlockquote().run()}
+              className={
+                `h-full w-7 cursor-pointer rounded-md border border-solid border-stone-500 fill-stone-600 px-1` +
+                `${editor.isActive('bulletList') ? 'bg-stone-200' : ''}`
+              }
+            >
+              <IoIosQuote className={'fill-stone-600'} />
+            </button>
+            <button
+              onClick={() => editor.chain().focus().toggleCodeBlock().run()}
+              className={
+                `h-full w-7 cursor-pointer rounded-md border border-solid border-stone-500 fill-stone-600 px-1` +
+                `${editor.isActive('bulletList') ? 'bg-stone-200' : ''}`
+              }
+            >
+              <BiCodeBlock className={'fill-stone-600'} />
+            </button>
+          </div>
         </FloatingMenu>
       )}
       <EditorContent editor={editor} />

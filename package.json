@@ -19,6 +19,7 @@
     "@editorjs/editorjs": "^2.26.5",
     "@hookform/resolvers": "^3.0.0",
     "@next/font": "13.1.6",
+    "@tiptap/extension-floating-menu": "^2.0.2",
     "@tiptap/pm": "^2.0.2",
     "@tiptap/react": "^2.0.2",
     "@tiptap/starter-kit": "^2.0.2",

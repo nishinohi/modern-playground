@@ -1,11 +1,12 @@
 import Highlight from '@tiptap/extension-highlight'
+import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
 import { BubbleMenu, BubbleMenuProps, EditorContent, FloatingMenu, isTextSelection, useEditor } from '@tiptap/react'
 
 import StarterKit from '@tiptap/starter-kit'
-import { useCallback, useEffect, useState } from 'react'
+import { ChangeEvent, MouseEventHandler, useCallback, useEffect, useRef, useState } from 'react'
 import { BiBold, BiCodeBlock, BiItalic } from 'react-icons/bi'
-import { FaListOl, FaListUl } from 'react-icons/fa'
+import { FaListOl, FaListUl, FaRegImage } from 'react-icons/fa'
 import { GoCode } from 'react-icons/go'
 import { IoIosQuote } from 'react-icons/io'
 import { IoLink } from 'react-icons/io5'
@@ -18,6 +19,7 @@ const Tiptap = () => {
       StarterKit, //
       Highlight.configure({ multicolor: true }), //
       Link.configure({ openOnClick: false }), //
+      Image, //
     ],
     content: `
       <p>
@@ -34,6 +36,28 @@ const Tiptap = () => {
   })
 
   const [isEditable, setIsEditable] = useState(true)
+
+  const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const handleImageButtonClick: MouseEventHandler<HTMLButtonElement> = () => {
+    if (fileInputRef.current) fileInputRef.current.click()
+  }
+
+  const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0]
+    if (!file) return
+
+    if (!editor) return
+    const reader = new FileReader()
+    reader.onload = () => {
+      editor
+        .chain()
+        .focus()
+        .setImage({ src: reader.result as string })
+        .run()
+    }
+    reader.readAsDataURL(file)
+  }
 
   const setLink = useCallback(() => {
     if (!editor) return
@@ -66,7 +90,14 @@ const Tiptap = () => {
     const isEmptyTextBlock = !doc.textBetween(from, to).length && isTextSelection(state.selection)
     const hasEditorFocus = view.hasFocus()
 
-    if (!hasEditorFocus || empty || isEmptyTextBlock || !editor.isEditable || editor.isActive('horizontalRule'))
+    if (
+      !hasEditorFocus ||
+      empty ||
+      isEmptyTextBlock ||
+      !editor.isEditable ||
+      editor.isActive('horizontalRule') ||
+      editor.isActive('image')
+    )
       return false
 
     return true
@@ -191,6 +222,14 @@ const Tiptap = () => {
               ${editor.isActive('bulletList') ? 'bg-stone-200' : 'bg-white'}`}
             >
               <FaListOl className={'fill-stone-600'} />
+            </button>
+            <button
+              onClick={handleImageButtonClick}
+              className={`h-full w-7 cursor-pointer rounded-md border border-solid border-stone-500 fill-stone-600 px-1 
+                ${editor.isActive('bulletList') ? 'bg-stone-200' : 'bg-white'}`}
+            >
+              <FaRegImage className={'fill-stone-600'} />
+              <input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} hidden />
             </button>
             <button
               onClick={() => editor.chain().focus().toggleBlockquote().run()}

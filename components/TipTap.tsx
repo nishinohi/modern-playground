@@ -1,6 +1,7 @@
 import Highlight from '@tiptap/extension-highlight'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
+import type { EditorProps } from '@tiptap/pm/view'
 import { BubbleMenu, BubbleMenuProps, EditorContent, FloatingMenu, isTextSelection, useEditor } from '@tiptap/react'
 
 import StarterKit from '@tiptap/starter-kit'
@@ -103,7 +104,7 @@ const Tiptap = () => {
     return true
   }, [])
 
-  const shuldShowLink = useCallback<NonNullable<BubbleMenuProps['shouldShow']>>(({ editor, view, state, from, to }) => {
+  const shuldShowLink = useCallback<NonNullable<BubbleMenuProps['shouldShow']>>(({ editor, state, from, to }) => {
     const { doc } = state
 
     // Sometime check for `empty` is not enough.
@@ -113,40 +114,46 @@ const Tiptap = () => {
     return isEmptyTextBlock && editor.isActive('link')
   }, [])
 
+  const handlePaste = useCallback<NonNullable<EditorProps['handlePaste']>>(
+    (_view, event) => {
+      const clipboardItems = event.clipboardData?.items
+      if (!clipboardItems) return false
+
+      for (const clipboardItem of Array.from(clipboardItems)) {
+        if (clipboardItem.type.indexOf('image') === -1) return false
+
+        const blob = clipboardItem.getAsFile()
+        if (!blob) return false
+
+        if (!editor) return
+        const reader = new FileReader()
+        reader.onload = () => {
+          editor
+            .chain()
+            .focus()
+            .setImage({
+              src: reader.result as string,
+            })
+            .run()
+        }
+        reader.readAsDataURL(blob)
+        return true
+      }
+      return false
+    },
+    [editor]
+  )
+
   useEffect(() => {
     if (editor) {
       editor.setEditable(isEditable)
       editor.setOptions({
         editorProps: {
-          handlePaste: (view, event) => {
-            const clipboardItems = event.clipboardData?.items
-            if (!clipboardItems) return false
-
-            for (const clipboardItem of Array.from(clipboardItems)) {
-              if (clipboardItem.type.indexOf('image') === -1) return false
-
-              const blob = clipboardItem.getAsFile()
-              if (!blob) return false
-
-              const reader = new FileReader()
-              reader.onload = () => {
-                editor
-                  .chain()
-                  .focus()
-                  .setImage({
-                    src: reader.result as string,
-                  })
-                  .run()
-              }
-              reader.readAsDataURL(blob)
-              return true
-            }
-            return false
-          },
+          handlePaste: handlePaste,
         },
       })
     }
-  }, [isEditable, editor])
+  }, [isEditable, editor, handlePaste])
 
   return (
     <>

@@ -144,16 +144,39 @@ const Tiptap = () => {
     [editor]
   )
 
+  const handleDrop = useCallback<NonNullable<EditorProps['handleDrop']>>(
+    (view, event, slice, moved) => {
+      if (moved || !event.dataTransfer || !event.dataTransfer.files || !event.dataTransfer.files[0]) return false
+      const blob = event.dataTransfer.files[0] // the dropped file
+      if (!blob.type.match('image.*')) return false
+      if (!editor) return
+      const reader = new FileReader()
+      reader.onload = () => {
+        editor
+          .chain()
+          .focus()
+          .setImage({
+            src: reader.result as string,
+          })
+          .run()
+      }
+      reader.readAsDataURL(blob)
+      return true // handled
+    },
+    [editor]
+  )
+
   useEffect(() => {
     if (editor) {
       editor.setEditable(isEditable)
       editor.setOptions({
         editorProps: {
           handlePaste: handlePaste,
+          handleDrop: handleDrop,
         },
       })
     }
-  }, [isEditable, editor, handlePaste])
+  }, [isEditable, editor, handlePaste, handleDrop])
 
   return (
     <>

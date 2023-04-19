@@ -116,6 +116,35 @@ const Tiptap = () => {
   useEffect(() => {
     if (editor) {
       editor.setEditable(isEditable)
+      editor.setOptions({
+        editorProps: {
+          handlePaste: (view, event) => {
+            const clipboardItems = event.clipboardData?.items
+            if (!clipboardItems) return false
+
+            for (const clipboardItem of Array.from(clipboardItems)) {
+              if (clipboardItem.type.indexOf('image') === -1) return false
+
+              const blob = clipboardItem.getAsFile()
+              if (!blob) return false
+
+              const reader = new FileReader()
+              reader.onload = () => {
+                editor
+                  .chain()
+                  .focus()
+                  .setImage({
+                    src: reader.result as string,
+                  })
+                  .run()
+              }
+              reader.readAsDataURL(blob)
+              return true
+            }
+            return false
+          },
+        },
+      })
     }
   }, [isEditable, editor])
 

@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+img.ProseMirror-selectednode {
+  outline: 1px solid #68cef8;
+}
+
+hr.ProseMirror-selectednode {
+  --tw-border-opacity: 1;
+  border-color: rgb(100 100 200 / var(--tw-border-opacity));
+}
